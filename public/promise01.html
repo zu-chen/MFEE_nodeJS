@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+    <script>
+        // const p = new Promise((resolve, reject)=>{
+        //     console.log(111);
+        //     setTimeout(function(){
+        //         console.log(222);
+        //         resolve('aaaaaaaaaa')
+        //     }, 500+Math.random()*1000)
+        //     console.log(333);
+        // });
+        //
+        // p.then(r=>{
+        //     console.log(r)
+        // })
+
+        new Promise((resolve, reject) => {
+            console.log(111);
+            setTimeout(function () {
+                console.log(222);
+                resolve('aaaaaaaaaa')
+            }, 500 + Math.random() * 1000) // 0.5~1.5秒之間
+            console.log(333);
+        })
+            // 傳送成功的resolve
+            .then(r => {
+                console.log(r)
+            });
+    </script>
+
+
+</body>
+
+</html>

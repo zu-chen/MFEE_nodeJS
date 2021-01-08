@@ -1,0 +1,16 @@
+GET HTTP://localhost:3000
+
+
+### 
+
+POST http://localhost:3000/try-post
+Content-Type: application/json
+
+{"name":"shinder"}
+
+
+###
+POST http://localhost:3000/try-post
+Content-Type: application/x-www-form-urlencoded
+
+name=shinder&age=30

@@ -1,1 +1,9 @@
-<%= name %>
+<!-- <%- %> 不跳脫 -->
+<%- include('parts/html-head') %>
+<%- include('parts/navbar') %>
+
+<!-- <%= %> 跳脫 -->
+<div class="container">
+<h2><%= name %></h2></div>
+<%- include('parts/scripts') %>
+<%- include('parts/html-foot') %>

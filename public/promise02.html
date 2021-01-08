@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+    <script>
+
+        new Promise((resolve, reject) => {
+            console.log(111);
+            setTimeout(function () {
+                console.log(222);
+                reject('bbbb')
+            }, 500 + Math.random() * 1000)
+            console.log(333);
+        })
+            // 沒有resolve,故可忽略此段
+            .then(r => {
+                console.log(r)
+            })
+            // 傳送失敗的resolve
+            .catch(ex => {
+                console.log('ex:', ex)
+            });
+    </script>
+
+
+</body>
+
+</html>

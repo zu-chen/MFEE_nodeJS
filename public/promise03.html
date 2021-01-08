@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+    <script>
+        function doSomething() {
+            return new Promise((resolve, reject) => {
+                const rnd = 500 + Math.random() * 1000;
+                setTimeout(function () {
+                    resolve(rnd)
+                }, rnd)
+            });
+        }
+
+        doSomething()
+            .then(r => {
+                console.log(1, r);
+                return doSomething(); // 這個return值,會傳給下面的.then
+            })
+            .then(r => {
+                console.log(2, r);
+                return doSomething();
+            })
+            .then(r => {
+                console.log(3, r);
+            });
+    </script>
+
+
+</body>
+
+</html>
