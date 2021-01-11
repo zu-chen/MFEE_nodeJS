@@ -4,6 +4,11 @@ require('dotenv').config();
 // 1. 引入 express
 const express = require('express');
 
+// multer, dest=destination
+const multer = require('multer');
+// const upload = multer({dest: 'tmp_uploads/'});
+const upload = require(__dirname + '/modules/upload-imgs')
+
 // 2. 建立 web server 物件
 const app = express();
 
@@ -68,6 +73,18 @@ app.post('/try-post-form', (req, res)=>{
 
 app.get('/pending', (req, res)=>{
     // res.send('ok')
+})
+
+// .single()上傳一個檔案
+app.post('/try-upload', upload.single('avatar'), (req, res)=>{
+    res.json({
+        file: req.file,
+        body: req.body,
+    })
+})
+// .array()上傳多個檔案
+app.post('/try-upload2', upload.array('photo'), (req, res)=>{
+    res.json(req.files)
 })
 
 // use->get.post.delete.put什麼方法都接受。網址後面KEY找不到的路徑

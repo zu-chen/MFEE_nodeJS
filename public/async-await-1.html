@@ -31,11 +31,19 @@
             console.log('end', r)
         });
 
+        // async await抓取錯誤時, 使用try catch, finally無論是否有錯誤皆會執行
         (async () => {
-            for (let i = 1; i < 10; i++) {
-                console.log(i, await doSomething())
+            try {
+                for (let i = 1; i < 10; i++) {
+                    console.log(i, await doSomething())
+                }
+            } catch (ex) {
+
+            } finally {
+
             }
         })()
+
 
     </script>
 

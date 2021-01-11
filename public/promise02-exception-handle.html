@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+    <script>
+        const ff = async () => {
+            // async: 非同步 await: 等待
+            // try catch抓取await錯誤
+            try {
+                await new Promise((resolve, reject) => {
+                    console.log(111);
+                    setTimeout(function () {
+                        console.log(222);
+                        reject('bbbb')
+                    }, 500 + Math.random() * 1000)
+                    console.log(333);
+                })
+            } catch (ex) {
+                // console.log為黑色代表無被丟至外面
+                console.log('ex:', ex);
+            }
+        }
+        // 最後呼叫執行
+        ff();
+
+    // throw測試錯誤訊息
+    // try {
+    //     throw new Error('errorrrrr---')
+    // } catch(ex){
+    //     console.log(ex);
+    // }
+
+
+    </script>
+
+
+</body>
+
+</html>
