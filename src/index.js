@@ -1,30 +1,23 @@
-// 拿取dotenv的設定檔
-require('dotenv').config();
+require('dotenv').config(); // 拿取dotenv的設定檔
 
-// 1. 引入 express
-const express = require('express');
+const express = require('express'); // 1. 引入 express
 const session = require('express-session');
 const MysqlStore = require('express-mysql-session')(session);
 const moment = require('moment-timezone');
 
-// multer, dest=destination
-const multer = require('multer');
+const multer = require('multer'); // multer, dest=destination
 // const upload = multer({dest: 'tmp_uploads/'});
 const upload = require(__dirname + '/modules/upload-imgs')
 const db = require(__dirname + '/modules/db_connect2')
 const sessionStore = new MysqlStore({}, db)
 
-// 2. 建立 web server 物件
-const app = express();
+const app = express(); // 2. 建立 web server 物件
 
-// 設定ejs樣版
-app.set('view engine', 'ejs');
+app.set('view engine', 'ejs'); // 設定ejs樣版
 
-// express.static提供對靜態資原始檔的服務
-app.use(express.static('public'));
+app.use(express.static('public')); // express.static提供對靜態資原始檔的服務
 // Top-level Middleware
-// extended: false引用預設的"系統模塊querystring官方推薦
-app.use(express.urlencoded({extended:false}));
+app.use(express.urlencoded({extended:false})); // extended: false引用預設的"系統模塊querystring官方推薦
 app.use(express.json());
 app.use(session({
     secret: 'sdkjghoif39097894508tyighdsgkgiso', //  '加密用的字串'
@@ -36,33 +29,33 @@ app.use(session({
     }
 }));
 
+app.use((req, res, next)=>{ // 動態baseUrl
+    res.locals.baseUrl = req.baseUrl;
+    res.locals.url = req.url;
+    next();
+});
+
 // 若此行在app.use(express.static('public')); 優先顯示此行訊息
 // app.get('/a.html', (req, res)=>{
 //     res.send('假的')
 // })
-
-// 3. 路由:指判斷應用程式如何回應用戶端對特定端點的要求
-app.get('/', (req, res)=>{
+app.get('/', (req, res)=>{ // 3. 路由:指判斷應用程式如何回應用戶端對特定端點的要求
     res.send('hola')
 })
 
-// ejs
-app.get('/try-ejs', (req, res)=>{
+app.get('/try-ejs', (req, res)=>{ // ejs
     res.render('a', {name:'Shinder'})
 })
 
-// json
-app.get('/json-sales', (req, res)=>{
+app.get('/json-sales', (req, res)=>{ // json
     const sales = require(__dirname + '/../data/sales')
 // res.json or res.send 皆可
 // res.json(sales);
 
-// 建立json-sales.ejs可使用render
-res.render('json-sales', {sales});
+res.render('json-sales', {sales}); // 建立json-sales.ejs可使用render
 })
 
-// query:取得參數 於網址輸入?a=123
-app.get('/try-qs', (req, res)=>{
+app.get('/try-qs', (req, res)=>{ // query:取得參數 於網址輸入?a=123
     res.json(req.query);
 })
 
@@ -76,12 +69,11 @@ app.post('/try-post', (req, res)=>{
     res.json(req.body);
 })
 
-// get:ejs
-app.get('/try-post-form', (req, res)=>{
+app.get('/try-post-form', (req, res)=>{ // get:ejs
     res.render('try-post-form', {email:'',password:''})
 })
-// post:按鈕送出後
-app.post('/try-post-form', (req, res)=>{
+
+app.post('/try-post-form', (req, res)=>{ // post:按鈕送出後
     res.render('try-post-form', req.body)
 })
 
@@ -89,20 +81,19 @@ app.get('/pending', (req, res)=>{
     // res.send('ok')
 })
 
-// .single()上傳一個檔案
-app.post('/try-upload', upload.single('avatar'), (req, res)=>{
+app.post('/try-upload', upload.single('avatar'), (req, res)=>{ // .single()上傳一個檔案
     res.json({
         file: req.file,
         body: req.body,
     })
 })
-// .array()上傳多個檔案
-app.post('/try-upload2', upload.array('photo'), (req, res)=>{
+
+app.post('/try-upload2', upload.array('photo'), (req, res)=>{ // .array()上傳多個檔案
     res.json(req.files)
 })
 
-// : 冒號之後為代稱名, ? 為選擇性的
-app.get('/my-params1/:action/:id', (req, res)=>{
+
+app.get('/my-params1/:action/:id', (req, res)=>{ // : 冒號之後為代稱名, ? 為選擇性的
     req.params.second = true;
     res.json(req.params)
 })
@@ -170,8 +161,7 @@ app.use((req, res)=>{
     res.status(404).send('找不到頁面')
 })
 
-// 4. Server 偵聽
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000; // 4. Server 偵聽
 app.listen(port, ()=>{
     console.log(`port: ${port}`, new Date());
 })

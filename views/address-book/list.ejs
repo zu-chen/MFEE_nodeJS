@@ -1,0 +1,91 @@
+<%- include('../parts/html-head') %>
+    <%- include('../parts/navbar') %>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                            <% for(let i=page-5; i<page+5; i++) if(i>=1 && i<=totalPages){ %>
+                                    <li class="page-item <%= page===i ? 'active' : '' %>">
+                                        <a class="page-link" href="?page=<%= i%>">
+                                            <%= i%>
+                                        </a>
+                                    </li>
+                                    <% }%>
+                                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col"><i class="fas fa-minus-circle"></i></th>
+                                <th scope="col">#</th>
+                                <th scope="col">姓名</th>
+                                <th scope="col">email</th>
+                                <th scope="col">手機</th>
+                                <th scope="col">生日</th>
+                                <th scope="col">地址</th>
+                                <th scope="col"><i class="fas fa-minus-circle"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% for(let i of rows){ %>
+                                <tr>
+                                    <td>
+                                        <a href="javascript: del_it(<%= i.sid %>)">
+                                            <i class="fas fa-minus-circle"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <%= i.sid %>
+                                    </td>
+                                    <td>
+                                        <%= i.name %>
+                                    </td>
+                                    <td>
+                                        <%= i.email %>
+                                    </td>
+                                    <td>
+                                        <%= i.mobile %>
+                                    </td>
+                                    <td>
+                                        <%= i.birthday %>
+                                    </td>
+                                    <td>
+                                        <%= i.address %>
+                                    </td>
+                                    <td><a href="/address-book/<%= i.sid %>/edit"><i class="fas fa-edit"></i></a></td>
+                                </tr>
+                                <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <%- include('../parts/scripts') %>
+            <script>
+                function del_it(sid) {
+                    if (confirm(`確定要刪除編號為 ${sid} 的資料嗎?`)) {
+                        fetch('/address-book/' + sid, {
+                            method: 'DELETE'
+                        })
+                            .then(r => r.json())
+                            .then(r => {
+                                if (r.success) {
+                                    // alert('刪除成功');
+                                    location.reload(); // 重整
+                                } else {
+                                    alert('失敗');
+                                }
+                            })
+                    }
+                }
+            </script>
+            <%- include('../parts/html-foot') %>
