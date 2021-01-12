@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+    <form name="form1" style="display: none">
+        <input type="file" name="photo" accept="image/*" multiple>
+    </form>
+
+    <button onclick="upload_btn.click()">上傳</button>
+    <div id="imgs"></div>
+    <script src="js/jquery-3.5.1.js"></script>
+    <script>
+
+        const upload_btn = document.querySelector('input[name=photo]');
+
+        function doUpload() {
+            const fd = new FormData(document.form1)
+
+            fetch('/try-upload2', {
+                method: 'POST',
+                body: fd
+            })
+                .then(r => r.json())
+                .then(img_ar => {
+                    console.log(img_ar);
+                    // 方法一
+                    // document.querySelector('#imgs').innerHTML =
+                    //     img_ar.map(el => {
+                    //         return `<img src="/img/${el.filename}">`
+                    //     }).join('');
+
+
+                    // 方法二
+                    const imgs = $('#imgs');
+                    for (let el of img_ar) {
+                        // $('<img>'): img標籤
+                        const img = $('<img>');
+                        img.attr('src', '/img/' + el.filename);
+                        imgs.append(img);
+                    }
+                })
+        }
+        upload_btn.addEventListener('change', doUpload);
+    </script>
+</body>
+
+</html>

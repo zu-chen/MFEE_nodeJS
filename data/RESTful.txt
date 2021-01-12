@@ -1,0 +1,47 @@
+RESTful
+
+
+1. list 列表
+    GET
+        /products/
+        /product
+
+2. 單筆資料
+    GET
+        /product/12
+
+3. 新增資料
+    POST
+        /product/
+
+4. 修改單筆資料
+    PUT
+        /product/12
+
+5. 刪除單筆資料
+    DELETE
+        /product/12
+---------------------------
+
+// 資料輸入
+req.query   // query string
+req.params  // routes parameters params:參數
+req.body    // form data
+req.file(s)
+
+---------------------------
+
+// 資料輸出
+res.end()  // res.write()
+res.send()
+res.json()
+res.render()
+
+
+
+
+
+
+
+
+

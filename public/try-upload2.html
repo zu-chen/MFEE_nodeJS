@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+    <form name="form1" style="display: none">
+        <input type="file" name="photo" accept="image/*" multiple>
+    </form>
+
+    <button onclick="upload_btn.click()">上傳</button>
+    <img id="myimg" src="" alt="">
+
+
+    <script>
+        const upload_btn = document.querySelector('input[name=photo]');
+
+        function doUpload() {
+            const fd = new FormData(document.form1)
+
+            fetch('/try-upload2', {
+                method: 'POST',
+                body: fd
+            })
+                .then(r => r.json())
+                .then(info => {
+                    console.log(info);
+                    // if (info.file) {
+                    //     document.querySelector('#myimg').src = '/img/' + info.file.filename;
+                    // }
+                })
+        }
+        upload_btn.addEventListener('change', doUpload);
+    </script>
+</body>
+
+</html>
