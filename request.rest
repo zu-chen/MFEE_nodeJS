@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 GET HTTP://localhost:3000
 
 
@@ -34,3 +35,21 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOjEsImFjY291bnQiOiJzaGluIiwibmlja25hbWUiOiLlsI_mlrAiLCJpYXQiOjE2MTA2MTE2Mjd9.MsK71HOisr_SUQ-reoqKW12nILBR8njeCJ-kJRUlFIc
 
 {"name":"zu","age": "23"}
+=======
+GET HTTP://localhost:3000
+
+
+### 
+
+POST http://localhost:3000/try-post
+Content-Type: application/json
+
+{"name":"shinder"}
+
+
+###
+POST http://localhost:3000/try-post
+Content-Type: application/x-www-form-urlencoded
+
+name=shinder&age=30
+>>>>>>> d48aef3134b77e01a8a5ac32e713b0cb64086178
