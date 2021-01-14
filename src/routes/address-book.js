@@ -5,6 +5,9 @@ const router = express.Router();
 const db = require(__dirname + '/../modules/db_connect2');
 
 router.use((req, res, next)=>{ // 動態baseUrl
+    if(!req.session.admin){
+        return res.redirect('/');
+    }
     res.locals.baseUrl = req.baseUrl;
     res.locals.url = req.url;
     next();

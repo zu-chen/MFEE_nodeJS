@@ -3,8 +3,12 @@ require('dotenv').config(); // 拿取dotenv的設定檔
 const express = require('express'); // 1. 引入 express
 const session = require('express-session');
 const MysqlStore = require('express-mysql-session')(session);
-const moment = require('moment-timezone');
+const cors = require('cors'); // 跨來源資源共享-1
+const axios = require('axios'); // 爬蟲用
+const cheerio = require('cheerio'); // 爬蟲用
+const jwt = require('jsonwebtoken');
 
+const moment = require('moment-timezone');
 const multer = require('multer'); // multer, dest=destination
 // const upload = multer({dest: 'tmp_uploads/'});
 const upload = require(__dirname + '/modules/upload-imgs')
@@ -29,9 +33,20 @@ app.use(session({
     }
 }));
 
+// app.use(cors()); // 取用跨來源資源共享-2(簡單版)
+const corsOptions = {
+    credentials: true, // 允許儲存cookie
+    origin: function(origin, cb){
+        console.log('origin:', origin);
+        cb(null, true);
+    }
+}
+app.use(cors(corsOptions));
+
 app.use((req, res, next)=>{ // 動態baseUrl
     res.locals.baseUrl = req.baseUrl;
     res.locals.url = req.url;
+    res.locals.sess = req.session; // 取用session
     next();
 });
 
@@ -40,7 +55,7 @@ app.use((req, res, next)=>{ // 動態baseUrl
 //     res.send('假的')
 // })
 app.get('/', (req, res)=>{ // 3. 路由:指判斷應用程式如何回應用戶端對特定端點的要求
-    res.send('hola')
+    res.render('a', {name:'首頁'})
 })
 
 app.get('/try-ejs', (req, res)=>{ // ejs
@@ -149,6 +164,96 @@ app.get('/try-db', async (req, res)=>{
 })
 
 app.use('/address-book', require(__dirname + '/routes/address-book'))
+
+app.get('/login', async (req, res)=>{ // 登入介面
+    res.render('login');
+})
+app.post('/login', upload.none(), async (req, res)=>{ // 登入內容
+    const [rows] = await db.query("SELECT * FROM admins WHERE account=? AND password=SHA1(?)",
+        [req.body.account, req.body.password]);
+
+    if(rows.length===1){ // 有長度即為true
+        req.session.admin = rows[0]; // 第一筆
+        res.json({
+            success: true,
+        })
+    } else {
+        res.json({
+            success: false,
+            body: req.body
+        })
+    }
+})
+
+app.post('/verify-jwt', async (req, res)=>{  // 驗證
+    jwt.verify(req.body.token, process.env.JWT_KEY, (error, payload)=>{ // token, key, callbackfunction
+        // jwt.verify()解密驗證
+        if(error){
+            res.json({error});
+        } else {
+            res.json(payload);
+        }
+    })
+})
+
+// https://bitbucket.org/lsd0125/mfee09-nodejs/src/b048607a7de353e58e5e45f12c83763bc0d9184a/public/set_jwt_token.html
+app.post('/verify2-jwt', async (req, res)=>{ // 驗證
+    let token = req.get('Authorization');
+    if(token.indexOf('Bearer ')===0){ // 代表在最前面
+        token = token.slice(7);
+        jwt.verify(token, process.env.JWT_KEY, (error, payload)=>{
+            if(error){
+                res.json({error});
+            } else {
+                res.json(payload);
+            }
+        })
+    } else {
+        res.json({error: 'bad bearer token'});
+    }
+
+})
+
+
+app.post('/login-jwt', async (req, res)=>{ // 拿取token
+    const [rows] = await db.query("SELECT sid, account, nickname FROM admins WHERE account=? AND password=SHA1(?)",
+        [req.body.account, req.body.password]);
+
+    if(rows.length===1){
+        const token = jwt.sign({...rows[0]}, process.env.JWT_KEY); // obj要解開 // jwt.sign(要被加密的資料,加密的字串)--->簽證
+        res.json({
+            success: true,
+            token,
+        })
+    } else {
+        res.json({
+            success: false,
+            body: req.body
+        })
+    }
+})
+
+app.get('/logout', (req, res)=>{ // 刪除session
+    delete req.session.admin;
+    res.redirect('/');
+})
+
+app.get('/yahoo', async (req, res)=>{ // axios
+    const response = await axios.get('https://tw.yahoo.com/');
+    res.send(response.data);
+})
+
+app.get('/yahoo2', async (req, res)=>{ // cheerio爬所有圖片
+    const response = await axios.get('https://tw.yahoo.com/');
+    // res.send(response.data);
+    const $ = cheerio.load(response.data);
+
+    $('img').each(function(i, el){
+        res.write(el.attribs.src + "\n");
+    })
+    res.end('');
+})
+
 
 
 

@@ -14,3 +14,23 @@ POST http://localhost:3000/try-post
 Content-Type: application/x-www-form-urlencoded
 
 name=shinder&age=30
+
+### JWT 登入測試
+POST http://localhost:3000/login-jwt
+Content-Type: application/json
+
+{"account":"zu","password": "1234"}
+
+#### 驗證
+POST http://localhost:3000/verify-jwt
+Content-Type: application/json
+
+{"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOjEsImFjY291bnQiOiJzaGluIiwibmlja25hbWUiOiLlsI_mlrAiLCJpYXQiOjE2MTA2MTE2Mjd9.MsK71HOisr_SUQ-reoqKW12nILBR8njeCJ-kJRUlFIc"
+}
+
+#### 驗證 headers
+POST http://localhost:3000/verify2-jwt
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOjEsImFjY291bnQiOiJzaGluIiwibmlja25hbWUiOiLlsI_mlrAiLCJpYXQiOjE2MTA2MTE2Mjd9.MsK71HOisr_SUQ-reoqKW12nILBR8njeCJ-kJRUlFIc
+
+{"name":"zu","age": "23"}

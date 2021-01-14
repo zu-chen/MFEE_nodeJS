@@ -1,0 +1,65 @@
+<%- include('parts/html-head') %>
+    <%- include('parts/navbar') %>
+
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="col-lg-6">
+                    <div class="alert alert-danger" role="alert" id="info" style="display: none">
+                        錯誤
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">登入</h5>
+
+                            <form name="form1" onsubmit="checkForm(); return false;">
+                                <div class="form-group">
+                                    <label for="account">Account</label>
+                                    <input type="text" class="form-control" id="account" name="account">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" class="form-control" id="password" name="password">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <%- include('parts/scripts') %>
+            <script>
+                const info = document.querySelector('#info');
+
+
+                function checkForm() {
+                    info.style.display = 'none';
+
+                    const fd = new FormData(document.form1);
+
+                    fetch('', {
+                        method: 'POST',
+                        body: fd
+                    })
+                        .then(r => r.json())
+                        .then(obj => {
+                            console.log(obj);
+                            if (!obj.success) {
+                                info.classList.remove('alert-success');
+                                info.classList.add('alert-danger');
+                                info.innerHTML = '帳號或密碼錯誤';
+                                info.style.display = 'block';
+                            } else {
+                                location.href = '/address-book/list'; // 成功即轉向
+                            }
+
+                        });
+                }
+
+            </script>
+            <%- include('parts/html-foot') %>
